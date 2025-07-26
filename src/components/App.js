@@ -1,15 +1,41 @@
-import React, { useState } from "react";
-import AdminNavBar from "./AdminNavBar";
-import QuestionForm from "./QuestionForm";
+import React, { useEffect, useState } from "react";
 import QuestionList from "./QuestionList";
 
 function App() {
-  const [page, setPage] = useState("List");
+  const [questions, setQuestions] = useState([]);
+  const [showQuestions, setShowQuestions] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch("http://localhost:4000/questions")
+      .then((r) => r.json())
+      .then((data) => {
+        if (isMounted) setQuestions(data);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <main>
-      <AdminNavBar onChangePage={setPage} />
-      {page === "Form" ? <QuestionForm /> : <QuestionList />}
+      <h1>Quiz Questions</h1>
+      <button onClick={() => setShowQuestions(true)}>View Questions</button>
+      {showQuestions && (
+        <QuestionList
+          questions={questions}
+          onDelete={(id) =>
+            setQuestions((prev) => prev.filter((q) => q.id !== id))
+          }
+          onUpdate={(updatedQ) =>
+            setQuestions((prev) =>
+              prev.map((q) => (q.id === updatedQ.id ? updatedQ : q))
+            )
+          }
+        />
+      )}
     </main>
   );
 }
