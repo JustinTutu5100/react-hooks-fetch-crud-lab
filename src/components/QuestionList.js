@@ -1,26 +1,23 @@
+// src/components/QuestionList.jsx
 import React from "react";
 import QuestionItem from "./QuestionItem";
 
-function QuestionList({ questions, onDelete, onUpdate }) {
-  if (!questions || !Array.isArray(questions)) return null;
-
+function QuestionList({ questions, onDeleteQuestion, onUpdateQuestion }) {
   return (
     <section>
-      <h2>Question List</h2>
+      <h1>Quiz Questions</h1>
       <ul>
-        {questions.map((q) =>
-          q ? (
-            <QuestionItem
-              key={q.id}
-              question={q}
-              onDelete={onDelete}
-              onUpdate={onUpdate}
-            />
-          ) : null
-        )}
+        {questions.map((question) => (
+          <QuestionItem
+            key={question.id}
+            question={question}
+            onDeleteQuestion={onDeleteQuestion}
+            onUpdateQuestion={onUpdateQuestion}
+          />
+        ))}
       </ul>
     </section>
   );
 }
 
-export default QuestionList;
+export default QuestionList;
